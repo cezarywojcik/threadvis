@@ -1,0 +1,19 @@
+* {
+	font-family: sans-serif;
+}
+
+#content {
+	width: 900px;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+}
+
+.form {
+	padding: 5px;
+	border: 1px solid black;
+}
+
+#vis {
+	text-align: left;
+}
