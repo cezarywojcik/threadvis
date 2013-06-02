@@ -1,7 +1,7 @@
 jQuery(function($) {
 	$('#urlsubmit').click(function(e) {
 		var url = $('#url').val();
-		threadvis(url, '#vis');
+		loadComments(url, '#vis', threadvis);
 		return false;
 	});
 });

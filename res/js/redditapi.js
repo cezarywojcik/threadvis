@@ -19,7 +19,7 @@ function getComments(data, result) {
 	}
 }
 
-function loadComments(url, selector) {
+function loadComments(url, selector, fn) {
 	url = url.split('?')[0]; // prevent get vars
 	$.ajax({
 			dataType: "json",
@@ -29,7 +29,7 @@ function loadComments(url, selector) {
 			var children = result[1].data.children;
 			getComments(children, comments);
 			// comments is now the object we can use to visualize things
-			$(selector).html(JSON.stringify(comments));
+			fn(selector, comments);
 			// uncomment to parse html
 			// $(selector).html($(selector).text());
 		}
