@@ -1,4 +1,4 @@
-function drawNode(node, nodes, lines, x, y) {
+function drawNode(node, content, x, y) {
 	var ups = node.ups;
 	var downs = node.downs;
 
@@ -13,45 +13,83 @@ function drawNode(node, nodes, lines, x, y) {
 		color = "#CCCCFF";
 	}
 
-	nodes
+	content
 		.append("circle")
 		.attr("cx", x+xoffset)
 		.attr("cy", y+yoffset)
-		.attr("r", 3)
+		.attr("r", 5)
 		.attr("fill", color)
-		.attr("opacity", "0.25");
-	lines
+		.attr("opacity", "0.5");
+	content
 		.append("line")
 		.attr("x1", x)
 		.attr("y1", y)
 		.attr("x2", x+xoffset)
 		.attr("y2", y+yoffset)
-		.attr("stroke-width", 1)
-		.attr("stroke", "#e6e6e6");
+		.attr("stroke-width", 2)
+		.attr("stroke", "#e6e6e6")
+		.attr("opacity", 0.5)
+		.attr("vector-effect", "non-scaling-stroke");
+
+	var plot = content.select("rect");
+	if (plot.attr("width") < x+xoffset) {
+		plot.attr("width", x+xoffset);
+	}
+	if (plot.attr("height") < -1*(y+yoffset)) {
+		plot.attr("height", -1*(y+yoffset));
+		plot.attr("y", (y+yoffset));
+	}
 
 	for(var i = 0; i < node.children.length; i++) {
-		drawNode(node.children[i], nodes, lines, x+xoffset, y+yoffset);
+		drawNode(node.children[i], content, x+xoffset, y+yoffset);
 	}
 }
 
 function threadvis(selector, comments) {
 	$(selector).html("");
 
-	var width = 800;
-	var height = 600;
+	var width = $(selector).width();
+	var height = $(selector).height();
 
 	var svg = d3.select(selector)
 		.append("svg")
-	svg.attr("width", width);
-	svg.attr("height", height);
+		.attr("width", width).attr("height", height);
 
-	var content = svg.append("g")
-		.attr("transform", "translate(10," + (height/2) + ")");;
+	var viewport = svg.append("g")
+		.attr("transform", "translate(10," + height/2 + ")");
 
-	var lines = content.append("g").attr("class", "lines");
-	var nodes = content.append("g").attr("class", "nodes");
+	var content = viewport.append("g");
+
+	var content2 = content.append("g");
+
+	content2.append("rect")
+		.attr("x", 0)
+		.attr("y", -1*height)
+		.attr("width", width)
+		.attr("height", height)
+		.attr("id", "back");
 
 	for(var i = 0; i < comments.length; i++) {
-		drawNode(comments[i], nodes, lines, 0, 0);
+		drawNode(comments[i], content2, 0, 0);
+	}
+
+	// make background rect bigger
+	// background rect is necessary so that mouse events register for zoom
+	var xmax = content2.select("rect").attr("width");
+	var ymax = content2.select("rect").attr("height");
+	content.select("rect")
+		.attr("x", -1*xmax)
+		.attr("y", -2*ymax)
+		.attr("width", 3*xmax)
+		.attr("height", 3*ymax);
+
+	var zoom = d3.behavior.zoom()
+		.on("zoom", rescale);
+
+	content.call(zoom);
+
+	function rescale() {		
+		content2.attr("transform", "translate(" + zoom.translate() + ")");
+		content.attr("transform", "scale(" + zoom.scale() + ")");
 	}
 }

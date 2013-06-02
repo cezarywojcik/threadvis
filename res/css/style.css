@@ -15,5 +15,9 @@
 }
 
 #vis {
+	height: 800px;
 	text-align: left;
+	padding: 0px;
+	margin: 0px;
+	background-color: #000000;
 }
