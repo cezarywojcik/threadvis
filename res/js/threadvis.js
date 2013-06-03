@@ -26,13 +26,17 @@ function drawNode(node, content, x, y) {
 			$('#tooltip').remove();
 			var div = d3.select("body").append("div")
 				.attr("id", "tooltip");
-			var details = "<br/>Upvotes: " + ups + "<br/>Downvotes: " + downs +
-										"<br/>Total: " + total + "<br/>Author: " + node.author;
 			div.transition()
 				.duration(200)
 				.style("opacity", 0.9);
 			$('#tooltip').html(node.text);
-			$('#tooltip').html(details + "<br/>" + $('#tooltip').text());
+			$('#tooltip').html($('#tooltip').text());
+			$('#tooltip').append("<p>");
+			$('#tooltip').append("<strong>Author:  </strong>" + node.author + "<br>");
+			$('#tooltip').append("<strong>Upvotes:  </strong>" + node.ups + "<br>");
+			$('#tooltip').append("<strong>Downvotes:  </strong>" + node.downs + "<br>");
+			$('#tooltip').append("</p>");
+
 			div.style("left", (d3.event.pageX) + "px")
 				.style("top", (d3.event.pageY - 28) + "px");
 		});
