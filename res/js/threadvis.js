@@ -1,3 +1,8 @@
+var ymin = 0;
+var xmin = 0;
+var ymax = 0;
+var xmax = 0;
+
 function drawNode(node, content, x, y) {
 	var ups = node.ups;
 	var downs = node.downs;
@@ -55,14 +60,16 @@ function drawNode(node, content, x, y) {
 		.attr("opacity", 0.5)
 		.attr("vector-effect", "non-scaling-stroke");
 
-	var plot = content.select("rect");
-	if (plot.attr("width") < x+xoffset) {
-		plot.attr("width", x+xoffset);
+	if (xmax < x+xoffset) {
+		xmax = x+xoffset;
 	}
-	if (plot.attr("height") < -1*(y+yoffset)) {
-		plot.attr("height", -1*(y+yoffset));
-		plot.attr("y", (y+yoffset));
+	if (ymax < -1*(y+yoffset)) {
+		ymax = -1*(y+yoffset);
 	}
+	if (ymin > -1*(y+yoffset)) {
+		ymin = -1*(y+yoffset);
+	}
+
 
 	for(var i = 0; i < node.children.length; i++) {
 		drawNode(node.children[i], content, x+xoffset, y+yoffset);
@@ -84,39 +91,19 @@ function threadvis(selector, comments) {
 
 	var content2 = content.append("g");
 
-	content2.append("rect")
-		.attr("x", 0)
-		.attr("y", -1*height)
-		.attr("width", 0)
-		.attr("height", 0)
-		.attr("id", "back");
-
 	for(var i = 0; i < comments.length; i++) {
 		drawNode(comments[i], content2, 0, 0);
 	}
 
-	// make background rect bigger
-	// background rect is necessary so that mouse events register for zoom
-	var xmax = content2.select("rect").attr("width");
-	var ymax = content2.select("rect").attr("height");
-	var yscale = height/ymax;
+	var yscale = height/(ymax-ymin);
 	var xscale = width/xmax;
 	var scale = Math.min(yscale, xscale);
 
-	content.attr("transform", "translate(0, " + height + ") scale(" + scale + ") ");
-
-	content2.select("rect")
-		.attr("x", -1*xmax)
-		.attr("y", -2*ymax)
-		.attr("width", 3*xmax)
-		.attr("height", 3*ymax)
-		.on("click", function() {
-			$('#tooltip').remove();
-		});
+	content.attr("transform", "translate(0, " + (height+scale*ymin) + ") scale(" + scale + ") ");
 
 	var zoom = d3.behavior.zoom()
 		.scale([scale])
-		.translate([0, height])
+		.translate([0, height+scale*ymin])
 		.on("zoom", rescale);
 
 	svg.call(zoom);
