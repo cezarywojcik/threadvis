@@ -3,7 +3,10 @@ function drawNode(node, content, x, y) {
 	var downs = node.downs;
 
 	var total = ups + downs;
-	var theta = (90*(ups+-1*downs)/total)*Math.PI/180;
+	var theta = 0;
+	if (total != 0) {
+		theta = (90*(ups+-1*downs)/total)*Math.PI/180;
+	}
 	var xoffset = Math.round(total*Math.cos(theta));
 	var yoffset = -1*Math.round(total*Math.sin(theta));
 
@@ -77,7 +80,7 @@ function threadvis(selector, comments) {
 		.attr("width", width).attr("height", height);
 
 	var viewport = svg.append("g")
-		.attr("transform", "translate(10," + height/2 + ")");
+		.attr("transform", "translate(10," + height + ")");
 
 	var content = viewport.append("g");
 
@@ -86,8 +89,8 @@ function threadvis(selector, comments) {
 	content2.append("rect")
 		.attr("x", 0)
 		.attr("y", -1*height)
-		.attr("width", width)
-		.attr("height", height)
+		.attr("width", 0)
+		.attr("height", 0)
 		.attr("id", "back");
 
 	for(var i = 0; i < comments.length; i++) {
@@ -98,6 +101,11 @@ function threadvis(selector, comments) {
 	// background rect is necessary so that mouse events register for zoom
 	var xmax = content2.select("rect").attr("width");
 	var ymax = content2.select("rect").attr("height");
+	var yscale = height/ymax;
+	var xscale = width/xmax;
+	var scale = Math.min(yscale, xscale);
+	console.log(scale);
+
 	content.select("rect")
 		.attr("x", -1*xmax)
 		.attr("y", -2*ymax)
@@ -108,9 +116,11 @@ function threadvis(selector, comments) {
 		});
 
 	var zoom = d3.behavior.zoom()
+		.scale([scale])
 		.on("zoom", rescale);
 
 	content.call(zoom);
+	content.attr("transform", "scale(" + scale + ")");
 
 	function rescale() {
 			$('#tooltip').remove();
