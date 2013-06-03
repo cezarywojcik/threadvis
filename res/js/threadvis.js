@@ -18,7 +18,7 @@ function drawNode(node, content, x, y) {
 		.append("circle")
 		.attr("cx", x+xoffset)
 		.attr("cy", y+yoffset)
-		.attr("r", 5)
+		.attr("r", Math.abs((ups-downs))/10)
 		.attr("fill", color)
 		.attr("opacity", "0.5")
 		.attr("class", "node")
