@@ -31,6 +31,12 @@ function drawNode(node, content, x, y) {
 				.style("opacity", 0.9);
 			$('#tooltip').html(node.text);
 			$('#tooltip').html($('#tooltip').text());
+			$('#tooltip').append("<p>");
+			$('#tooltip').append("<strong>Author:  </strong>" + node.author + "<br>");
+			$('#tooltip').append("<strong>Upvotes:  </strong>" + node.ups + "<br>");
+			$('#tooltip').append("<strong>Downvotes:  </strong>" + node.downs + "<br>");
+			$('#tooltip').append("</p>");
+
 			div.style("left", (d3.event.pageX) + "px")
 				.style("top", (d3.event.pageY - 28) + "px");
 		});
