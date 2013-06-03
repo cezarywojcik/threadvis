@@ -7,10 +7,6 @@ function drawNode(node, content, x, y) {
 	var xoffset = Math.round(total*Math.cos(theta));
 	var yoffset = -1*Math.round(total*Math.sin(theta));
 
-	var div = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0)
-    .html(node.text);
 
 	var color = "#FF9999";
 
@@ -24,16 +20,20 @@ function drawNode(node, content, x, y) {
 		.attr("cy", y+yoffset)
 		.attr("r", 5)
 		.attr("fill", color)
-		.attr("opacity", "0.5");
-
-	content.on("click", function(d, i) {
-		div.transition()
-			.duration(200)
-			.style("opacity", 0.9);
-		div.html(node.text)
-			.style("left", (d3.event.pageX) + "px")
-			.style("top", (d3.event.pageY - 28) + "px");
-	});
+		.attr("opacity", "0.5")
+		.attr("class", "node")
+		.on("click", function() {
+			$('#tooltip').remove();
+			var div = d3.select("body").append("div")
+		    .attr("id", "tooltip");
+			div.transition()
+				.duration(200)
+				.style("opacity", 0.9);
+			$('#tooltip').html(node.text);
+			$('#tooltip').html($('#tooltip').text());
+			div.style("left", (d3.event.pageX) + "px")
+				.style("top", (d3.event.pageY - 28) + "px");
+		});
 
 	content
 		.append("line")
@@ -96,7 +96,10 @@ function threadvis(selector, comments) {
 		.attr("x", -1*xmax)
 		.attr("y", -2*ymax)
 		.attr("width", 3*xmax)
-		.attr("height", 3*ymax);
+		.attr("height", 3*ymax)
+		.on("click", function() {
+			$('#tooltip').remove();
+		});
 
 	var zoom = d3.behavior.zoom()
 		.on("zoom", rescale);
@@ -104,6 +107,7 @@ function threadvis(selector, comments) {
 	content.call(zoom);
 
 	function rescale() {
+			$('#tooltip').remove();
 		content2.attr("transform", "translate(" + zoom.translate() + ")");
 		content.attr("transform", "scale(" + zoom.scale() + ")");
 	}

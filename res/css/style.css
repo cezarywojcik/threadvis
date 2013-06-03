@@ -21,3 +21,22 @@
 	margin: 0px;
 	background-color: #000000;
 }
+
+#tooltip {
+	position: absolute;
+	max-width: 260px;
+	padding-left: 10px;
+	padding-right: 10px;
+	font: 11px sans-serif;
+	background: #ffe0c7;
+	border: 0px;
+	border-radius: 8px;
+	pointer-events: none;
+}
+
+.node:hover
+{
+	stroke: #ffffff;
+	stroke-width: 4px;
+	vector-effect: non-scaling-stroke;
+}
