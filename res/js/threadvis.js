@@ -77,12 +77,10 @@ function threadvis(selector, comments) {
 
 	var svg = d3.select(selector)
 		.append("svg")
-		.attr("width", width).attr("height", height);
+		.attr("width", width)
+		.attr("height", height);
 
-	var viewport = svg.append("g")
-		.attr("transform", "translate(10," + height + ")");
-
-	var content = viewport.append("g");
+	var content = svg.append("g");
 
 	var content2 = content.append("g");
 
@@ -104,9 +102,10 @@ function threadvis(selector, comments) {
 	var yscale = height/ymax;
 	var xscale = width/xmax;
 	var scale = Math.min(yscale, xscale);
-	console.log(scale);
 
-	content.select("rect")
+	content.attr("transform", "translate(0, " + height + ") scale(" + scale + ") ");
+
+	content2.select("rect")
 		.attr("x", -1*xmax)
 		.attr("y", -2*ymax)
 		.attr("width", 3*xmax)
@@ -117,14 +116,14 @@ function threadvis(selector, comments) {
 
 	var zoom = d3.behavior.zoom()
 		.scale([scale])
+		.translate([0, height])
 		.on("zoom", rescale);
 
-	content.call(zoom);
-	content.attr("transform", "scale(" + scale + ")");
+	svg.call(zoom);
 
 	function rescale() {
-			$('#tooltip').remove();
-		content2.attr("transform", "translate(" + zoom.translate() + ")");
-		content.attr("transform", "scale(" + zoom.scale() + ")");
+		$('#tooltip').remove();
+		content.attr("transform", "translate(" + zoom.translate() + ")" 
+			+ " scale(" + zoom.scale() + ")");
 	}
 }
