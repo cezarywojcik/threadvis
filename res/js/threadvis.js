@@ -96,7 +96,7 @@ function threadvis(selector, comments) {
 	}
 
 	var yscale = height/(ymax-ymin);
-	var xscale = width/xmax;
+	var xscale = width/(xmax-xmin);
 	var scale = Math.min(yscale, xscale);
 
 	content.attr("transform", "translate(0, " + (height+scale*ymin) + ") scale(" + scale + ") ");
@@ -107,6 +107,11 @@ function threadvis(selector, comments) {
 		.on("zoom", rescale);
 
 	svg.call(zoom);
+
+	svg.on("mousedown", function() {
+		d3.event.stopPropagation();
+		$('#tooltip').remove();
+	})
 
 	function rescale() {
 		$('#tooltip').remove();
