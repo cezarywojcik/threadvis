@@ -43,6 +43,7 @@ function drawNode(node, content, x, y) {
 			$('#tooltip').append("<strong>Author:  </strong>" + node.author + "<br>");
 			$('#tooltip').append("<strong>Upvotes:  </strong>" + node.ups + "<br>");
 			$('#tooltip').append("<strong>Downvotes:  </strong>" + node.downs + "<br>");
+			$('#tooltip').append("<strong>Karma:  </strong>" + (node.ups-node.downs) + "<br>");
 			$('#tooltip').append("</p>");
 
 			div.style("left", (d3.event.pageX) + "px")
