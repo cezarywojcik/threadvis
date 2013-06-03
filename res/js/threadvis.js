@@ -25,12 +25,14 @@ function drawNode(node, content, x, y) {
 		.on("click", function() {
 			$('#tooltip').remove();
 			var div = d3.select("body").append("div")
-		    .attr("id", "tooltip");
+				.attr("id", "tooltip");
+			var details = "<br/>Upvotes: " + ups + "<br/>Downvotes: " + downs +
+										"<br/>Total: " + total + "<br/>Author: " + node.author;
 			div.transition()
 				.duration(200)
 				.style("opacity", 0.9);
 			$('#tooltip').html(node.text);
-			$('#tooltip').html($('#tooltip').text());
+			$('#tooltip').html(details + "<br/>" + $('#tooltip').text());
 			div.style("left", (d3.event.pageX) + "px")
 				.style("top", (d3.event.pageY - 28) + "px");
 		});
