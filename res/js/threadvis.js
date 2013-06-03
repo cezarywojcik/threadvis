@@ -22,11 +22,13 @@ function drawNode(node, content, x, y) {
 		color = "#CCCCFF";
 	}
 
+	var r = Math.abs((ups-downs))/10;
+
 	content
 		.append("circle")
 		.attr("cx", x+xoffset)
 		.attr("cy", y+yoffset)
-		.attr("r", Math.abs((ups-downs))/10)
+		.attr("r", r)
 		.attr("fill", color)
 		.attr("opacity", "0.5")
 		.attr("class", "node")
@@ -62,13 +64,13 @@ function drawNode(node, content, x, y) {
 		.attr("vector-effect", "non-scaling-stroke");
 
 	if (xmax < x+xoffset) {
-		xmax = x+xoffset;
+		xmax = x+xoffset+r;
 	}
 	if (ymax < -1*(y+yoffset)) {
-		ymax = -1*(y+yoffset);
+		ymax = -1*(y+yoffset)+r;
 	}
 	if (ymin > -1*(y+yoffset)) {
-		ymin = -1*(y+yoffset);
+		ymin = -1*(y+yoffset)-r;
 	}
 
 
